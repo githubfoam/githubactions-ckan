@@ -48,5 +48,5 @@ jobs:
            docker-compose config
            docker-compose images
            docker-compose ps   
-           timeout 45s docker-compose logs -f ckan > log.out &
+           timeout 45s docker-compose logs -f ckan > log.out
            cat log.out

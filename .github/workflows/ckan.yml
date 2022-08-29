@@ -1,0 +1,52 @@
+name: "CKAN NBs CI workflow"
+
+
+on:
+  push:
+    branches: [ test ]
+  # schedule:
+  #     - cron:  '0 0 1 * *' ##execution of a task in the first minute of the month     
+      
+jobs:
+
+
+
+  ubuntu-latest-conda-job:
+    name: "CKAN  ubuntu-latest"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: hostnamectl status    
+    # - name: "make image"
+    #   run: |
+    #       set -x  
+    #       sudo make deploy-ckan        
+    - name: "docker-compose --version"
+      run: |
+           sudo apt-get -qq update
+           docker-compose --version
+    - name: "git clone"
+      run: |
+           cd /tmp
+           git clone https://github.com/ckan/ckan.git 
+           cd ckan          
+           git checkout tags/ckan-2.9.5
+           cp contrib/docker/.env.template contrib/docker/.env
+           cat contrib/docker/.env
+    - name: "docker-compose build"
+      run: |
+           cd /tmp/ckan
+           sudo usermod -aG docker $USER # Add your user to the docker group\
+           id $USER  
+           cd contrib/docker
+           docker-compose up -d --build        
+    - name: "docker-compose  log"
+      run: |
+           cd /tmp/ckan/contrib/docker
+           docker-compose restart ckan
+           docker-compose config
+           docker-compose images
+           docker-compose ps   
+           timeout 45s docker-compose logs -f ckan > log.out &
+           cat log.out

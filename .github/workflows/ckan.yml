@@ -39,10 +39,11 @@ jobs:
            docker-compose up -d --build        
     - name: "docker-compose  log"
       run: |
+           set -ex #debug
            cd /tmp/ckan/contrib/docker
            docker-compose restart ckan
            docker-compose config
            docker-compose images
            docker-compose ps   
-           timeout 45s docker-compose logs -f ckan > log.out
-           cat log.out
+          #  timeout 45s docker-compose logs -f ckan > log.out
+          #  cat log.out

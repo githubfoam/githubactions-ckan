@@ -3,9 +3,9 @@ name: "CKAN NBs CI workflow"
 
 on:
   push:
-    branches: [ test ]
-  # schedule:
-  #     - cron:  '0 0 1 * *' ##execution of a task in the first minute of the month     
+    branches: [ main ]
+  schedule:
+      - cron:  '0 0 1 * *' ##execution of a task in the first minute of the month     
       
 jobs:
 
@@ -17,11 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: "os fingerprinting"
-      run: hostnamectl status    
-    # - name: "make image"
-    #   run: |
-    #       set -x  
-    #       sudo make deploy-ckan        
+      run: hostnamectl status           
     - name: "docker-compose --version"
       run: |
            sudo apt-get -qq update
